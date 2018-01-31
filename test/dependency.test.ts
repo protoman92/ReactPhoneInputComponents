@@ -1,5 +1,6 @@
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, Subscription } from 'rxjs';
 import { Collections, Nullable, Numbers, Try } from 'javascriptutilities';
+import { StateType } from 'type-safe-state-js';
 import { ReduxStore as Store, DispatchReducer } from 'reactive-rx-redux-js';
 import { Data } from 'react-base-utilities-js';
 import { ErrorDisplay } from 'react-error-display-components';
@@ -16,6 +17,125 @@ namespace CountryCode {
     public fetchCodes<Prev>(prev: Try<Prev>): Observable<Try<CC[]>> {
       return Observable.of(prev.map(() => countryCodes));
     }
+  }
+}
+
+class MockModel implements PhoneInput.Base.Model.Type {
+  public model: PhoneInput.Base.Model.Type;
+  public mockFetchCountryCodes?: () => CC[];
+
+  public get id(): Readonly<string> {
+    return this.model.id;
+  }
+
+  public get substatePath(): Readonly<Try<string>> {
+    return this.model.substatePath;
+  }
+
+  public get fullExtensionPath(): Readonly<Try<string>> {
+    return this.model.fullExtensionPath;
+  }
+
+  public get fullNumberPath(): Readonly<Try<string>> {
+    return this.model.fullNumberPath;
+  }
+
+  public get fullExtSearchValuePath(): Readonly<Try<string>> {
+    return this.model.fullExtSearchValuePath;
+  }
+
+  public get fullSelectableCodesPath(): Readonly<Try<string>> {
+    return this.model.fullSelectableCodesPath;
+  }
+
+  public get fullAllCountryCodesPath(): Readonly<Try<string>> {
+    return this.model.fullAllCountryCodesPath;
+  }
+
+  public constructor(model: PhoneInput.Base.Model.Type) {
+    this.model = model;
+  }
+
+  public fetchCodes<Prev>(prev: Try<Prev>): Observable<Try<CC[]>> {
+    if (this.mockFetchCountryCodes !== undefined) {
+      try {
+        prev.getOrThrow();
+        let codes = this.mockFetchCountryCodes();
+        return Observable.of(Try.success(codes));
+      } catch (e) {
+        return Observable.of(Try.failure(e));
+      }
+    } else {
+      return this.model.fetchCodes(prev);
+    }
+  }
+
+  public allCountryCodesStream(): Observable<Try<CC[]>> {
+    return this.model.allCountryCodesStream();
+  }
+
+  public extensionStream(): Observable<Try<CC>> {
+    return this.model.extensionStream();
+  }
+
+  public numberStream = (): Observable<Try<string>> => {
+    return this.model.numberStream();
+  }
+
+  public extSearchStream = (): Observable<Try<string>> => {
+    return this.model.extSearchStream();
+  }
+
+  public selectableCodesStream(): Observable<Try<CC[]>> {
+    return this.model.selectableCodesStream();
+  }
+
+  public extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<CC> {
+    return this.model.extensionForState(state);
+  }
+
+  public numberForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+    return this.model.numberForState(state);
+  }
+
+  public extSearchForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+    return this.model.extSearchForState(state);
+  }
+
+  public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CC[]> {
+    return this.model.selectableCodesForState(state);
+  }
+
+  public filterCodes(options: CC[], query: string): CC[] {
+    return this.model.filterCodes(options, query);
+  }
+
+  public allCountryCodesTrigger(): Try<Observer<Nullable<CC[]>>> {
+    return this.model.allCountryCodesTrigger();
+  }
+
+  public numberTrigger = (): Try<Observer<Nullable<string>>> => {
+    return this.model.numberTrigger();
+  }
+
+  public extensionTrigger(): Try<Observer<Nullable<CC>>> {
+    return this.model.extensionTrigger();
+  }
+
+  public extSearchTrigger = (): Try<Observer<Nullable<string>>> => {
+    return this.model.extSearchTrigger();
+  }
+
+  public selectableCodesTrigger(): Try<Observer<Nullable<CC[]>>> {
+    return this.model.selectableCodesTrigger();
+  }
+
+  public operationErrorTrigger = (): Observer<Nullable<Error>> => {
+    return this.model.operationErrorTrigger();
+  }
+
+  public operationErrorStream = (): Observable<Try<Error>> => {
+    return this.model.operationErrorStream();
   }
 }
 
@@ -56,6 +176,8 @@ describe('Phone input view model should work correctly', () => {
       }
     };
 
+    afterEach(() => subscription.unsubscribe());
+
     let dispatchStore = Store.Dispatch.createDefault(allDispatchReducer);
 
     dispatchProvider = {
@@ -88,6 +210,35 @@ describe('Phone input view model should work correctly', () => {
     rxModel = new PhoneInput.Rx.Model.Self(rxProvider, '');
   });
 
+  let testFetchAllCountryCodes = (
+    provider: PhoneInput.Base.Provider.Type,
+    model: PhoneInput.Base.Model.Type,
+  ): void => {
+    /// Setup
+    let errors: Error[] = [];
+    let mockModel = new MockModel(model);
+    let viewModel = new PhoneInput.Base.ViewModel.Self(provider, mockModel);
+    let fetchError = 'Failed to fetch country codes';
+
+    mockModel.operationErrorStream()
+      .mapNonNilOrEmpty(v => v)
+      .doOnNext(e => errors.push(e))
+      .subscribe()
+      .toBeDisposedBy(subscription);
+
+    mockModel.mockFetchCountryCodes = () => {
+      throw new Error(fetchError);
+    };
+
+    /// When
+    viewModel.initialize();
+
+    /// Then
+    let lastError = Collections.last(errors).getOrThrow();
+    expect(errors.length).toBe(1);
+    expect(lastError.message).toBe(fetchError);
+  };
+
   let testExtensionSearchQuery = (
     provider: PhoneInput.Base.Provider.Type,
     model: PhoneInput.Base.Model.Type,
@@ -96,7 +247,8 @@ describe('Phone input view model should work correctly', () => {
     let selectableSbj = new BehaviorSubject<CC[]>([]);
     let extSearchInputSbj = new BehaviorSubject<Nullable<string>>(undefined);
     let extSbj = new BehaviorSubject<Nullable<CC>>(undefined);
-    let viewModel = new PhoneInput.Base.ViewModel.Self(provider, model);
+    let mockModel = new MockModel(model);
+    let viewModel = new PhoneInput.Base.ViewModel.Self(provider, mockModel);
     let stateStream = viewModel.stateStream().mapNonNilOrEmpty(v => v).shareReplay(1);
 
     viewModel.initialize();
@@ -138,6 +290,14 @@ describe('Phone input view model should work correctly', () => {
       }, delay);
     }
   };
+
+  it('Fetch country codes fail for dispatch - should update error state', () => {
+    testFetchAllCountryCodes(dispatchProvider, dispatchModel);
+  });
+
+  it('Fetch country codes fail for rx - should update error state', () => {
+    testFetchAllCountryCodes(rxProvider, rxModel);
+  });
 
   it('Trigger dispatch extension search query - should update selectable codes', () => {
     testExtensionSearchQuery(dispatchProvider, dispatchModel);
