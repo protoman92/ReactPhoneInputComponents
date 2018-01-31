@@ -4,72 +4,72 @@ import { ErrorDisplay } from 'react-error-display-components';
 
 export namespace Identity {
   /**
-   * Identity for phone picker component.
+   * Identity for phone input component.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
   export interface Type extends Component.Web.Identity.Type {}
 
   /**
-   * Identity for phone picker extension input.
+   * Identity for phone input extension input.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
   export interface ExtensionType extends Component.Web.Identity.Type {}
 
   /**
-   * Identity for phone picker number input.
+   * Identity for phone input number input.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
   export interface NumberType extends Component.Web.Identity.Type {}
 
   /**
-   * Identity for phone picker extension search input.
+   * Identity for phone input extension search input.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
   export interface ExtSearchType extends Component.Web.Identity.Type {}
 
   /**
-   * Identity for phone picker country code container.
+   * Identity for phone input country code container.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
-  export interface CCodeListType extends Component.Web.Identity.Type {}
+  export interface CountryCodeListType extends Component.Web.Identity.Type {}
 
   /**
-   * Identity for phone picker country code item.
+   * Identity for phone input country code item.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
-  export interface CCodeItemType extends Component.Web.Identity.Type {}
+  export interface CountryCodeItemType extends Component.Web.Identity.Type {}
 
   /**
-   * Identity for phone picker input container. The input container consists
+   * Identity for phone input input container. The input container consists
    * of the extension input and the phone number input.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
-  export interface InputCTType extends Component.Web.Identity.Type {}
+  export interface InputContainerType extends Component.Web.Identity.Type {}
 
   /**
-   * Identity for phone picker extension search container. The ext search
+   * Identity for phone input extension search container. The ext search
    * container consists of the extension search input and the extension result
    * list.
    * @extends {Component.Web.Identity.Type} Common identity extension.
    */
-  export interface ExtSearchCTType extends Component.Web.Identity.Type {}
+  export interface ExtSearchContainerType extends Component.Web.Identity.Type {}
 
   /**
-   * Select identity for phone picker component, based on the provided id.
+   * Select identity for phone input component, based on the provided id.
    */
   export interface SelectorType {
     identity(id: string): Try<Type>;
     extension_identity(id: string): Try<ExtensionType>;
     number_identity(id: string): Try<NumberType>;
-    inputCT_identity(id: string): Try<InputCTType>;
+    inputCT_identity(id: string): Try<InputContainerType>;
     extSearch_identity(id: string): Try<ExtSearchType>;
-    countryCode_item_identity(id: string): Try<CCodeItemType>;
-    countryCode_list_identity(id: string): Try<CCodeListType>;
-    extSearchCT_identity(id: string): Try<ExtSearchCTType>;
+    countryCode_item_identity(id: string): Try<CountryCodeItemType>;
+    countryCode_list_identity(id: string): Try<CountryCodeListType>;
+    extSearchCT_identity(id: string): Try<ExtSearchContainerType>;
   }
 
   /**
-   * Provide identity selector for phone picker component.
+   * Provide identity selector for phone input component.
    * @extends {ErrorDisplay.Web.Identity.ProviderType} Error identity provider.
    */
   export interface ProviderType extends ErrorDisplay.Web.Identity.ProviderType {

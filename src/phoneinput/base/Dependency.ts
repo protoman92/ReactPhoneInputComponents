@@ -55,7 +55,7 @@ export namespace Action {
    * @returns {Type} A type instance.
    */
   export let createDefault = (): Type => {
-    let substate = 'phonePicker';
+    let substate = 'phoneinput';
 
     return {
       substatePath: () => Try.success(substate),
@@ -484,11 +484,11 @@ export namespace ViewModel {
     }
 
     public operationErrorTrigger = (): Observer<Nullable<Error>> => {
-      throw new Error(`Must override this for ${this}`);
+      return this.model.operationErrorTrigger();
     }
 
     public operationErrorStream = (): Observable<Try<Error>> => {
-      throw new Error(`Must override this for ${this}`);
+      return this.model.operationErrorStream();
     }
 
     public extensionForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {

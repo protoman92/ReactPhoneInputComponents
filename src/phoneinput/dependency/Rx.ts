@@ -4,7 +4,7 @@ import { StateType } from 'type-safe-state-js';
 import { ReduxStore as Store, RxReducer } from 'reactive-rx-redux-js';
 import { ErrorDisplay } from 'react-error-display-components';
 import * as Base from './../base';
-import { CountryCode } from './../base/Dependency';
+import { CountryCode as CC } from './../base/Dependency';
 
 export namespace Action {
   /**
@@ -12,12 +12,12 @@ export namespace Action {
    * @extends {Base.Action.Type} Base action extension.
    */
   export interface Type extends Base.Action.Type {
-    allCountryCodesTrigger(id: string): Try<Observer<Nullable<CountryCode[]>>>;
-    allCountryCodesStream(id: string): Try<Observable<Nullable<CountryCode[]>>>;
-    selectableCodesTrigger(id: string): Try<Observer<Nullable<CountryCode[]>>>;
-    selectableCodesStream(id: string): Try<Observable<Nullable<CountryCode[]>>>;
-    extensionTrigger(id: string): Try<Observer<Nullable<CountryCode>>>;
-    extensionStream(id: string): Try<Observable<Nullable<CountryCode>>>;
+    allCountryCodesTrigger(id: string): Try<Observer<Nullable<CC[]>>>;
+    allCountryCodesStream(id: string): Try<Observable<Nullable<CC[]>>>;
+    selectableCodesTrigger(id: string): Try<Observer<Nullable<CC[]>>>;
+    selectableCodesStream(id: string): Try<Observable<Nullable<CC[]>>>;
+    extensionTrigger(id: string): Try<Observer<Nullable<CC>>>;
+    extensionStream(id: string): Try<Observable<Nullable<CC>>>;
     numberTrigger(id: string): Try<Observer<Nullable<string>>>;
     numberStream(id: string): Try<Observable<Nullable<string>>>;
     extSearchTrigger(id: string): Try<Observer<Nullable<string>>>;
@@ -38,20 +38,18 @@ export namespace Action {
   }
 
   /**
-   * Create default phone picker action.
+   * Create default phone input action.
    * @returns {Type} A Action type instance.
    */
   export let createDefault = (): Type => {
-    let substate = 'phonePicker';
-    let allOptionsTrigger = new BehaviorSubject<Nullable<CountryCode[]>>(undefined);
-    let selectableTrigger = new BehaviorSubject<Nullable<CountryCode[]>>(undefined);
-    let extensionTrigger = new BehaviorSubject<Nullable<CountryCode>>(undefined);
+    let allOptionsTrigger = new BehaviorSubject<Nullable<CC[]>>(undefined);
+    let selectableTrigger = new BehaviorSubject<Nullable<CC[]>>(undefined);
+    let extensionTrigger = new BehaviorSubject<Nullable<CC>>(undefined);
     let numberTrigger = new BehaviorSubject<Nullable<string>>(undefined);
     let extSearchTrigger = new BehaviorSubject<Nullable<string>>(undefined);
 
     return {
       ...Base.Action.createDefault(),
-      substatePath: () => Try.success(substate),
       allCountryCodesTrigger: () => Try.success(allOptionsTrigger),
       allCountryCodesStream: () => Try.success(allOptionsTrigger),
       selectableCodesTrigger: () => Try.success(selectableTrigger),
@@ -165,11 +163,11 @@ export namespace Model {
       this.errorModel = new ErrorDisplay.Rx.Model.Self(provider);
     }
 
-    public fetchCodes<Prev>(prev: Try<Prev>): Observable<Try<CountryCode[]>> {
+    public fetchCodes<Prev>(prev: Try<Prev>): Observable<Try<CC[]>> {
       return this.baseModel.fetchCodes(prev);
     }
 
-    public allCountryCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>> {
+    public allCountryCodesTrigger(): Try<Observer<Nullable<CC[]>>> {
       return this.provider.action.phoneInput.allCountryCodesTrigger(this.id);
     }
 
@@ -177,16 +175,16 @@ export namespace Model {
       return this.provider.action.phoneInput.numberTrigger(this.id);
     }
 
-    public extensionTrigger(): Try<Observer<Nullable<CountryCode>>> {
+    public extensionTrigger(): Try<Observer<Nullable<CC>>> {
       return this.provider.action.phoneInput.extensionTrigger(this.id);
     }
 
     public extSearchTrigger = (): Try<Observer<Nullable<string>>> => {
-      throw this.provider.action.phoneInput.extSearchTrigger(this.id);
+      return this.provider.action.phoneInput.extSearchTrigger(this.id);
     }
 
-    public selectableCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>> {
-      throw this.provider.action.phoneInput.selectableCodesTrigger(this.id);
+    public selectableCodesTrigger(): Try<Observer<Nullable<CC[]>>> {
+      return this.provider.action.phoneInput.selectableCodesTrigger(this.id);
     }
 
     public operationErrorTrigger = (): Observer<Nullable<Error>> => {
@@ -197,11 +195,11 @@ export namespace Model {
       return this.errorModel.operationErrorStream();
     }
 
-    public allCountryCodesStream(): Observable<Try<CountryCode[]>> {
+    public allCountryCodesStream(): Observable<Try<CC[]>> {
       return this.baseModel.allCountryCodesStream();
     }
 
-    public extensionStream(): Observable<Try<CountryCode>> {
+    public extensionStream(): Observable<Try<CC>> {
       return this.baseModel.extensionStream();
     }
 
@@ -213,11 +211,11 @@ export namespace Model {
       return this.baseModel.extSearchStream();
     }
 
-    public selectableCodesStream(): Observable<Try<CountryCode[]>> {
+    public selectableCodesStream(): Observable<Try<CC[]>> {
       return this.baseModel.selectableCodesStream();
     }
 
-    public extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<CountryCode> {
+    public extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<CC> {
       return this.baseModel.extensionForState(state);
     }
 
@@ -229,11 +227,11 @@ export namespace Model {
       return this.baseModel.extSearchForState(state);
     }
 
-    public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CountryCode[]> {
+    public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CC[]> {
       return this.baseModel.selectableCodesForState(state);
     }
 
-    public filterCodes(options: CountryCode[], query: string): CountryCode[] {
+    public filterCodes(options: CC[], query: string): CC[] {
       return this.baseModel.filterCodes(options, query);
     }
   }

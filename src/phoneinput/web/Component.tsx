@@ -5,7 +5,7 @@ import { Component as ComponentUtil, Data } from 'react-base-utilities-js';
 import * as Base from './../base';
 import { Identity } from './Dependency';
 
-import { CountryCode } from './../base/Dependency';
+import { CountryCode as CC } from './../base/Dependency';
 
 export namespace Props {
   /**
@@ -43,7 +43,7 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
     this.handleExtSearchInput(e.target.value);
   }
 
-  protected createCountryCodeItemComponent(cc: CountryCode): JSX.Element {
+  protected createCountryCodeItemComponent(cc: CC): JSX.Element {
     let vm = this.viewModel;
 
     let identity = Try.unwrap(this.props.identity)
@@ -52,7 +52,7 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
 
     return <div
       key={cc.code}
-      onClick={this.handleCCItemSelection.bind(this, cc)}
+      onClick={this.handleCountryCodeItemSelection.bind(this, cc)}
       {...identity.value}>
       {vm.formatCountryCode(cc)}
     </div>;

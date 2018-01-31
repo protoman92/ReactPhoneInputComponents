@@ -4,11 +4,11 @@ import { Nullable } from 'javascriptutilities';
 import { StateType } from 'type-safe-state-js';
 import { Component as ComponentUtil } from 'react-base-utilities-js';
 import { ViewModel } from './Dependency';
-import { CountryCode } from './Dependency';
+import { CountryCode as CC } from './Dependency';
 
 export namespace Props {
   /**
-   * Base props type for phone picker component.
+   * Base props type for phone input component.
    */
   export interface Type {
     viewModel: Readonly<ViewModel.Type>;
@@ -63,9 +63,9 @@ export abstract class Self<P extends Props.Type> extends
 
   /**
    * Trigger state update to select extension.
-   * @param {CountryCode} code Country code instance.
+   * @param {CC} code Country code instance.
    */
-  protected handleCCItemSelection(code: CountryCode): void {
+  protected handleCountryCodeItemSelection(code: CC): void {
     this.viewModel.triggerSelectedCountryCode(code);
   }
 
@@ -76,9 +76,9 @@ export abstract class Self<P extends Props.Type> extends
 
   /**
    * Create country code item component.
-   * @param {CountryCode} cc Country code instance.
+   * @param {CC} cc Country code instance.
    * @returns {JSX.Element} A JSX element instance.
    */
-  protected abstract createCountryCodeItemComponent(cc: CountryCode): JSX.Element;
+  protected abstract createCountryCodeItemComponent(cc: CC): JSX.Element;
   public abstract render(): JSX.Element;
 }
