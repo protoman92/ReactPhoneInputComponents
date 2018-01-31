@@ -40,7 +40,7 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
    * @param {ChangeEvent<HTMLInputElement>} e Change event instance.
    */
   private handleExtSearchInputEvent = (e: ChangeEvent<HTMLInputElement>): void => {
-    this.handleExtSearchInput(e.target.value);
+    this.handleExtensionQueryInput(e.target.value);
   }
 
   protected createCountryCodeItemComponent(cc: CC): JSX.Element {
@@ -60,7 +60,6 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
 
   public render(): JSX.Element {
     let vm = this.viewModel;
-    let state = this.state;
     let id = vm.id;
 
     let identity = Try.unwrap(this.props.identity)
@@ -72,19 +71,19 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
           disabled={true}
           onChange={this.handleExtSearchInputEvent.bind(this)}
           type={Data.InputType.Web.Case.TEXT}
-          value={vm.extensionForState(state).getOrElse('')}
+          value={this.currentExtension().value}
           {...identity.flatMap(v => v.extension_identity(id)).value}/>
         <input
           onChange={this.handleNumberInputEvent.bind(this)}
           type={Data.InputType.Web.Case.TEXT}
-          value={vm.numberForState(state).getOrElse('')}
+          value={this.currentPhoneNumber().value}
           {...identity.flatMap(v => v.number_identity(id)).value}/>
       </div>
       <div {...identity.flatMap(v => v.extSearchCT_identity(id)).value}>
         <input
           onChange={this.handleExtSearchInputEvent.bind(this)}
           type={Data.InputType.Web.Case.TEXT}
-          value={vm.extSearchForState(state).getOrElse('')}
+          value={this.currentExtensionQuery().value}
           {...identity.flatMap(v => v.extSearch_identity(id)).value}/>
         <div {...identity.flatMap(v => v.countryCode_list_identity(id)).value}>
           {this.createSelectableCodeComponents()}

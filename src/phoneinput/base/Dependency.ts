@@ -130,7 +130,7 @@ export namespace Model {
    * Provide model for phone picker component.
    */
   export interface ProviderType {
-    phoneInput_model(id: string): Try<Type>;
+    phoneInput_model(id: string): Type;
   }
 
   /**
@@ -369,7 +369,7 @@ export namespace ViewModel {
     extSearchForState(state: Readonly<Nullable<StateType<any>>>): Try<string>;
     selectableCodesForState(state: Readonly<StateType<any>>): Try<CountryCode[]>;
     triggerNumberInput(value: Nullable<string>): void;
-    triggerExtSearchInput(value: Nullable<string>): void;
+    triggerExtensionQueryInput(value: Nullable<string>): void;
     triggerSelectedCountryCode(code: Nullable<CountryCode>): void;
 
     /**
@@ -385,7 +385,7 @@ export namespace ViewModel {
    * Provide view model for phone picker component.
    */
   export interface ProviderType {
-    phoneInput_viewModel(id: string): Try<Type>;
+    phoneInput_viewModel(id: string): Type;
   }
 
   /**
@@ -516,7 +516,7 @@ export namespace ViewModel {
       this.model.numberTrigger().map(v => v.next(value));
     }
 
-    public triggerExtSearchInput = (value: string): void => {
+    public triggerExtensionQueryInput = (value: string): void => {
       this.model.extSearchTrigger().map(v => v.next(value));
     }
 

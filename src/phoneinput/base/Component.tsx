@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { Component } from 'react';
-import { Nullable } from 'javascriptutilities';
+import { Nullable, Try } from 'javascriptutilities';
 import { StateType } from 'type-safe-state-js';
 import { Component as ComponentUtil } from 'react-base-utilities-js';
 import { ViewModel } from './Dependency';
@@ -57,8 +57,8 @@ export abstract class Self<P extends Props.Type> extends
    * Trigger state update for extension search input.
    * @param {Nullable<string>} input A string value.
    */
-  protected handleExtSearchInput = (input: Nullable<string>): void => {
-    this.viewModel.triggerExtSearchInput(input);
+  protected handleExtensionQueryInput = (input: Nullable<string>): void => {
+    this.viewModel.triggerExtensionQueryInput(input);
   }
 
   /**
@@ -72,6 +72,18 @@ export abstract class Self<P extends Props.Type> extends
   protected createSelectableCodeComponents = (): JSX.Element[] => {
     let codes = this.viewModel.selectableCodesForState(this.state);
     return codes.getOrElse([]).map(v => this.createCountryCodeItemComponent(v));
+  }
+
+  protected currentExtension(): Try<string> {
+    return this.viewModel.extensionForState(this.state);
+  }
+
+  protected currentPhoneNumber(): Try<string> {
+    return this.viewModel.numberForState(this.state);
+  }
+
+  protected currentExtensionQuery(): Try<string> {
+    return this.viewModel.extSearchForState(this.state);
   }
 
   /**
