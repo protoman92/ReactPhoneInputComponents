@@ -273,7 +273,7 @@ describe('Phone input view model should work correctly', () => {
 
     for (let code of countryCodes) {
       /// When
-      viewModel.triggerExtSearchInput(code.name);
+      viewModel.triggerExtensionQueryInput(code.name);
 
       // This part needs a timeout because there's a slight delay between the
       // extension search input trigger and the selectable code trigger.
