@@ -1,0 +1,44 @@
+{
+  "name": "react-phone-input-components",
+  "version": "1.0.0",
+  "description": "MVVM-based phone input components for React applications.",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "typings": "./dist/src/index.d.ts",
+  "jest": {
+    "preset": "react-native"
+  },
+  "scripts": {
+    "setup": "npm install",
+    "build": "tsc",
+    "test": "tsc && jest --coverage --forceExit",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/protoman92/ReactPhoneInputComponents.git"
+  },
+  "author": "Hai Pham",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/protoman92/ReactPhoneInputComponents/issues"
+  },
+  "homepage": "https://github.com/protoman92/ReactPhoneInputComponents#readme",
+  "dependencies": {
+    "@types/react-native": "^0.52.5",
+    "react-base-utilities-js": "^1.0.1",
+    "react-error-display-components": "^1.0.0",
+    "react-native": "^0.52.2"
+  },
+  "devDependencies": {
+    "@types/enzyme": "^3.1.8",
+    "@types/enzyme-adapter-react-16": "^1.0.1",
+    "@types/jest": "^21.1.6",
+    "coveralls": "^3.0.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest": "^21.2.1",
+    "react-dom": "^16.2.0",
+    "ts-jest": "^21.2.3"
+  }
+}
