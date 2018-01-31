@@ -1,13 +1,13 @@
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Collections, Nullable, Numbers, Try } from 'javascriptutilities';
-import { ReduxStore as Store } from 'reactive-rx-redux-js';
+import { ReduxStore as Store, DispatchReducer } from 'reactive-rx-redux-js';
 import { Data } from 'react-base-utilities-js';
 import { ErrorDisplay } from 'react-error-display-components';
 import { PhoneInput } from './../src';
 
 type CC = Data.CountryCode.Type;
 
-let countryCodes: CC[] = Numbers.range(1, 100)
+let countryCodes: CC[] = Numbers.range(1, 1000)
   .map(v => '' + v)
   .map(v => ({ code: v, callingCode: v, name: 'place' + v }));
 
@@ -22,20 +22,57 @@ namespace CountryCode {
 describe('Phone input view model should work correctly', () => {
   let delay = 0.2;
   let subscription: Subscription;
+  let dispatchProvider: PhoneInput.Dispatch.Provider.Type;
+  let dispatchModel: PhoneInput.Dispatch.Model.Type;
   let rxProvider: PhoneInput.Rx.Provider.Type;
   let rxModel: PhoneInput.Rx.Model.Self;
 
   beforeEach(() => {
     subscription = new Subscription();
+
+    /// Initialize dispatch provider.
+    let dispatchAction = PhoneInput.Dispatch.Action.createDefault();
+    let dispatchErrorAction = ErrorDisplay.Dispatch.Action.createDefault();
+    let dispatchErrorActionProvider = { error: dispatchErrorAction };
+
+    let dispatchActionProvider = {
+      ...dispatchErrorActionProvider,
+      phoneInput: dispatchAction,
+    };
+
+    let dispatchReducer = PhoneInput.Dispatch.Reducer.createDefault();
+    let dispatchErrorReducer = ErrorDisplay.Dispatch.Reducer.createDefault();
+
+    let allDispatchReducer: DispatchReducer<any> = (state, action) => {
+      switch (true) {
+        case ErrorDisplay.Dispatch.Action.isInstance(action):
+          return dispatchErrorReducer(state, action);
+
+        case PhoneInput.Dispatch.Action.isInstance(action):
+          return dispatchReducer(state, action);
+
+        default:
+          return state;
+      }
+    };
+
+    let dispatchStore = Store.Dispatch.createDefault(allDispatchReducer);
+
+    dispatchProvider = {
+      action: dispatchActionProvider,
+      constants: { error: { displayDuration: 0 }},
+      countryCodes: new CountryCode.Self(),
+      store: dispatchStore,
+      substateSeparator: '.',
+    };
+
+    dispatchModel = new PhoneInput.Dispatch.Model.Self(dispatchProvider, '');
+
+    /// Initialize Rx provider.
     let rxAction = PhoneInput.Rx.Action.createDefault();
     let rxErrorAction = ErrorDisplay.Rx.Action.createDefault();
     let rxErrorActionProvider = { error: rxErrorAction };
-
-    let rxActionProvider = {
-      ...rxErrorActionProvider,
-      phoneInput: rxAction,
-    };
-
+    let rxActionProvider = { ...rxErrorActionProvider, phoneInput: rxAction };
     let rxErrorReducers = ErrorDisplay.Rx.Reducer.createDefault(rxErrorActionProvider);
     let rxReducers = PhoneInput.Rx.Reducer.createDefault('', rxActionProvider);
     let rxStore = new Store.Rx.Self(rxErrorReducers, ...rxReducers);
@@ -101,6 +138,10 @@ describe('Phone input view model should work correctly', () => {
       }, delay);
     }
   };
+
+  it('Trigger dispatch extension search query - should update selectable codes', () => {
+    testExtensionSearchQuery(dispatchProvider, dispatchModel);
+  });
 
   it('Trigger rx extension search query - should update selectable codes', () => {
     testExtensionSearchQuery(rxProvider, rxModel);

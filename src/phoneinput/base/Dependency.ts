@@ -82,8 +82,8 @@ export namespace Provider {
    * @extends {ErrorDisplay.Base.Provider.Type} Error display provider extension.
    */
   export interface Type extends Store.Provider.Type, ErrorDisplay.Base.Provider.Type {
-    action: Action.ProviderType;
-    countryCodes: CountryCodeType;
+    action: Readonly<Action.ProviderType>;
+    countryCodes: Readonly<CountryCodeType>;
   }
 }
 
@@ -95,6 +95,11 @@ export namespace Model {
   export interface Type extends ErrorDisplay.Base.Model.Type {
     id: Readonly<string>;
     substatePath: Readonly<Try<string>>;
+    fullExtensionPath: Readonly<Try<string>>;
+    fullExtSearchValuePath: Readonly<Try<string>>;
+    fullNumberPath: Readonly<Try<string>>;
+    fullSelectableCodesPath: Readonly<Try<string>>;
+    fullAllCountryCodesPath: Readonly<Try<string>>;
     fetchCodes<Prev>(prev: Try<Prev>): Observable<Try<CountryCode[]>>;
     allCountryCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>>;
     allCountryCodesStream(): Observable<Try<CountryCode[]>>;
@@ -140,8 +145,24 @@ export namespace Model {
       return this.provider.action.phoneInput.substatePath(this.id);
     }
 
-    private get fullExtensionPath(): Readonly<Try<string>> {
+    public get fullExtensionPath(): Readonly<Try<string>> {
       return this.provider.action.phoneInput.fullExtensionPath(this.id);
+    }
+
+    public get fullNumberPath(): Readonly<Try<string>> {
+      return this.provider.action.phoneInput.fullNumberPath(this.id);
+    }
+
+    public get fullExtSearchValuePath(): Readonly<Try<string>> {
+      return this.provider.action.phoneInput.fullExtSearchPath(this.id);
+    }
+
+    public get fullSelectableCodesPath(): Readonly<Try<string>> {
+      return this.provider.action.phoneInput.fullSelectableCodesPath(this.id);
+    }
+
+    public get fullAllCountryCodesPath(): Readonly<Try<string>> {
+      return this.provider.action.phoneInput.fullAllCountryCodesPath(this.id);
     }
 
     private get extensionValuePath(): Readonly<Try<string>> {
@@ -152,20 +173,12 @@ export namespace Model {
         .map(v => v[1]);
     }
 
-    private get fullNumberPath(): Readonly<Try<string>> {
-      return this.provider.action.phoneInput.fullNumberPath(this.id);
-    }
-
     private get numberValuePath(): Readonly<Try<string>> {
       let separator = this.provider.substateSeparator;
 
       return this.fullNumberPath
         .map(v => S.separateSubstateAndValuePaths(v, separator))
         .map(v => v[1]);
-    }
-
-    private get fullExtSearchValuePath(): Readonly<Try<string>> {
-      return this.provider.action.phoneInput.fullExtSearchPath(this.id);
     }
 
     private get extSearchValuePath(): Readonly<Try<string>> {
@@ -176,20 +189,12 @@ export namespace Model {
         .map(v => v[1]);
     }
 
-    private get fullSelectableCodesPath(): Readonly<Try<string>> {
-      return this.provider.action.phoneInput.fullSelectableCodesPath(this.id);
-    }
-
     private get selectableCodesValuePath(): Readonly<Try<string>> {
       let separator = this.provider.substateSeparator;
 
       return this.fullSelectableCodesPath
         .map(v => S.separateSubstateAndValuePaths(v, separator))
         .map(v => v[1]);
-    }
-
-    private get fullAllCountryCodesPath(): Readonly<Try<string>> {
-      return this.provider.action.phoneInput.fullAllCountryCodesPath(this.id);
     }
 
     public constructor(provider: Provider.Type, id: string) {
@@ -199,34 +204,6 @@ export namespace Model {
 
     public fetchCodes<Prev>(prev: Try<Prev>): Observable<Try<CountryCode[]>> {
       return this.provider.countryCodes.fetchCodes(prev);
-    }
-
-    public allCountryCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>> {
-      throw new Error(`Must override this for ${this}`);
-    }
-
-    public numberTrigger = (): Try<Observer<Nullable<string>>> => {
-      throw new Error(`Must override this for ${this}`);
-    }
-
-    public extensionTrigger(): Try<Observer<Nullable<CountryCode>>> {
-      throw new Error(`Must override this for ${this}`);
-    }
-
-    public extSearchTrigger = (): Try<Observer<Nullable<string>>> => {
-      throw new Error(`Must override this for ${this}`);
-    }
-
-    public selectableCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>> {
-      throw new Error(`Must override this for ${this}`);
-    }
-
-    public operationErrorTrigger = (): Observer<Nullable<Error>> => {
-      throw new Error(`Must override this for ${this}`);
-    }
-
-    public operationErrorStream = (): Observable<Try<Error>> => {
-      throw new Error(`Must override this for ${this}`);
     }
 
     public allCountryCodesStream(): Observable<Try<CountryCode[]>> {
@@ -347,6 +324,34 @@ export namespace Model {
           || code.search(queryLC) >= 0
           || callingCode.search(queryLC) >= 0;
       });
+    }
+
+    public allCountryCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>> {
+      throw new Error(`Must override this for ${this}`);
+    }
+
+    public numberTrigger = (): Try<Observer<Nullable<string>>> => {
+      throw new Error(`Must override this for ${this}`);
+    }
+
+    public extensionTrigger(): Try<Observer<Nullable<CountryCode>>> {
+      throw new Error(`Must override this for ${this}`);
+    }
+
+    public extSearchTrigger = (): Try<Observer<Nullable<string>>> => {
+      throw new Error(`Must override this for ${this}`);
+    }
+
+    public selectableCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>> {
+      throw new Error(`Must override this for ${this}`);
+    }
+
+    public operationErrorTrigger = (): Observer<Nullable<Error>> => {
+      throw new Error(`Must override this for ${this}`);
+    }
+
+    public operationErrorStream = (): Observable<Try<Error>> => {
+      throw new Error(`Must override this for ${this}`);
     }
   }
 }

@@ -157,6 +157,26 @@ export namespace Model {
       return this.baseModel.substatePath;
     }
 
+    public get fullExtensionPath(): Readonly<Try<string>> {
+      return this.baseModel.fullExtensionPath;
+    }
+
+    public get fullNumberPath(): Readonly<Try<string>> {
+      return this.baseModel.fullNumberPath;
+    }
+
+    public get fullExtSearchValuePath(): Readonly<Try<string>> {
+      return this.baseModel.fullExtSearchValuePath;
+    }
+
+    public get fullSelectableCodesPath(): Readonly<Try<string>> {
+      return this.baseModel.fullSelectableCodesPath;
+    }
+
+    public get fullAllCountryCodesPath(): Readonly<Try<string>> {
+      return this.baseModel.fullAllCountryCodesPath;
+    }
+
     public constructor(provider: Provider.Type, id: string) {
       this.provider = provider;
       this.baseModel = new Base.Model.Self(provider, id);
