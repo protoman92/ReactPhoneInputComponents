@@ -1,10 +1,9 @@
 import { BehaviorSubject, Observable, Observer } from 'rxjs';
 import { Nullable, Try } from 'javascriptutilities';
-import { StateType } from 'type-safe-state-js';
 import { ReduxStore as Store, RxReducer } from 'reactive-rx-redux-js';
 import { ErrorDisplay } from 'react-error-display-components';
 import * as Base from './../base';
-import { CountryCode as CC } from './../base/Dependency';
+import { CountryCode as CC, ReadonlyState } from './../base/Dependency';
 
 export namespace Action {
   /**
@@ -39,9 +38,10 @@ export namespace Action {
 
   /**
    * Create default phone input action.
+   * @param {string} [id] A string value.
    * @returns {Type} A Action type instance.
    */
-  export let createDefault = (): Type => {
+  export let createDefault = (id?: string): Type => {
     let allOptionsTrigger = new BehaviorSubject<Nullable<CC[]>>(undefined);
     let selectableTrigger = new BehaviorSubject<Nullable<CC[]>>(undefined);
     let extensionTrigger = new BehaviorSubject<Nullable<CC>>(undefined);
@@ -49,7 +49,7 @@ export namespace Action {
     let extSearchTrigger = new BehaviorSubject<Nullable<string>>(undefined);
 
     return {
-      ...Base.Action.createDefault(),
+      ...Base.Action.createDefault(id),
       allCountryCodesTrigger: () => Try.success(allOptionsTrigger),
       allCountryCodesStream: () => Try.success(allOptionsTrigger),
       selectableCodesTrigger: () => Try.success(selectableTrigger),
@@ -235,19 +235,19 @@ export namespace Model {
       return this.baseModel.selectableCodesStream();
     }
 
-    public extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<CC> {
+    public extensionForState(state: ReadonlyState): Try<CC> {
       return this.baseModel.extensionForState(state);
     }
 
-    public numberForState(state: Readonly<Nullable<StateType<any>>>): Try<string> {
+    public numberForState(state: ReadonlyState): Try<string> {
       return this.baseModel.numberForState(state);
     }
 
-    public extSearchForState(state: Readonly<Nullable<StateType<any>>>): Try<string> {
-      return this.baseModel.extSearchForState(state);
+    public extensionQueryForState(state: ReadonlyState): Try<string> {
+      return this.baseModel.extensionQueryForState(state);
     }
 
-    public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CC[]> {
+    public selectableCodesForState(state: ReadonlyState): Try<CC[]> {
       return this.baseModel.selectableCodesForState(state);
     }
 

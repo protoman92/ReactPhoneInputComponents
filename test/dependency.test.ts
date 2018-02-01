@@ -98,8 +98,8 @@ class MockModel implements PhoneInput.Base.Model.Type {
     return this.model.numberForState(state);
   }
 
-  public extSearchForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
-    return this.model.extSearchForState(state);
+  public extensionQueryForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+    return this.model.extensionQueryForState(state);
   }
 
   public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CC[]> {
@@ -266,7 +266,7 @@ describe('Phone input view model should work correctly', () => {
       .toBeDisposedBy(subscription);
 
     stateStream
-      .map(v => model.extSearchForState(v))
+      .map(v => model.extensionQueryForState(v))
       .mapNonNilOrElse(v => v, '')
       .subscribe(extSearchInputSbj)
       .toBeDisposedBy(subscription);

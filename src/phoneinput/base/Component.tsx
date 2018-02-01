@@ -83,7 +83,11 @@ export abstract class Self<P extends Props.Type> extends
   }
 
   protected currentExtensionQuery(): Try<string> {
-    return this.viewModel.extSearchForState(this.state);
+    return this.viewModel.extensionQueryForState(this.state);
+  }
+
+  protected currentSelectableCountryCodes(): Try<CC[]> {
+    return this.viewModel.selectableCodesForState(this.state);
   }
 
   /**

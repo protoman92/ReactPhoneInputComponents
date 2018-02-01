@@ -6,6 +6,7 @@ import { Data, MVVM } from 'react-base-utilities-js';
 import { ErrorDisplay } from 'react-error-display-components';
 
 export type CountryCode = Data.CountryCode.Type;
+export type ReadonlyState = Readonly<Nullable<StateType<any>>>;
 
 export namespace Action {
   /**
@@ -52,10 +53,14 @@ export namespace Action {
   /**
    * Create default base phone input action. This can be used to construct
    * more complex actions for dispatch store- or rx store-based implementations.
+   * @param {string} [id] A string value.
    * @returns {Type} A type instance.
    */
-  export let createDefault = (): Type => {
-    let substate = 'phoneinput';
+  export let createDefault = (id?: string): Type => {
+    let substate = 'phoneinput' + Try.unwrap(id)
+      .filter(v => v.length > 0, 'Empty id')
+      .map(v => '.' + v)
+      .getOrElse('');
 
     return {
       substatePath: () => Try.success(substate),
@@ -111,10 +116,10 @@ export namespace Model {
     extSearchStream(): Observable<Try<string>>;
     selectableCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>>;
     selectableCodesStream(): Observable<Try<CountryCode[]>>;
-    extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<CountryCode>;
-    numberForState(state: Readonly<Nullable<StateType<any>>>): Try<string>;
-    extSearchForState(state: Readonly<Nullable<StateType<any>>>): Try<string>;
-    selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CountryCode[]>;
+    extensionForState(state: ReadonlyState): Try<CountryCode>;
+    numberForState(state: ReadonlyState): Try<string>;
+    extensionQueryForState(state: ReadonlyState): Try<string>;
+    selectableCodesForState(state: ReadonlyState): Try<CountryCode[]>;
 
     /**
      * Filter selectable options to display only those that match the extension
@@ -270,7 +275,7 @@ export namespace Model {
       }
     }
 
-    public extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<CountryCode> {
+    public extensionForState(state: ReadonlyState): Try<CountryCode> {
       return Try.unwrap(state)
         .map(v => S.fromKeyValue(v))
         .zipWith(this.extensionValuePath, (v1, v2) => v1.valueAtNode(v2))
@@ -279,21 +284,21 @@ export namespace Model {
         .map(v => <CountryCode>v);
     }
 
-    public numberForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+    public numberForState = (state: ReadonlyState): Try<string> => {
       return Try.unwrap(state)
         .map(v => S.fromKeyValue(v))
         .zipWith(this.numberValuePath, (v1, v2) => v1.stringAtNode(v2))
         .flatMap(v => v);
     }
 
-    public extSearchForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+    public extensionQueryForState = (state: ReadonlyState): Try<string> => {
       return Try.unwrap(state)
         .map(v => S.fromKeyValue(v))
         .zipWith(this.extSearchValuePath, (v1, v2) => v1.stringAtNode(v2))
         .flatMap(v => v);
     }
 
-    public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CountryCode[]> {
+    public selectableCodesForState(state: ReadonlyState): Try<CountryCode[]> {
       return Try.unwrap(state)
         .map(v => S.fromKeyValue(v))
         .zipWith(this.selectableCodesValuePath, (v1, v2) => v1.valueAtNode(v2))
@@ -364,9 +369,9 @@ export namespace ViewModel {
    */
   export interface Type extends MVVM.ViewModel.ReduxType, ErrorDisplay.Base.ViewModel.Type {
     id: Readonly<string>;
-    extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<string>;
-    numberForState(state: Readonly<Nullable<StateType<any>>>): Try<string>;
-    extSearchForState(state: Readonly<Nullable<StateType<any>>>): Try<string>;
+    extensionForState(state: ReadonlyState): Try<string>;
+    numberForState(state: ReadonlyState): Try<string>;
+    extensionQueryForState(state: ReadonlyState): Try<string>;
     selectableCodesForState(state: Readonly<StateType<any>>): Try<CountryCode[]>;
     triggerNumberInput(value: Nullable<string>): void;
     triggerExtensionQueryInput(value: Nullable<string>): void;
@@ -446,11 +451,12 @@ export namespace ViewModel {
 
         /// Clear the extension search query once the user has selected a
         /// country code from the list.
-        ccSelectStream
-          .map(() => '')
+        ccSelectStream.map(() => '')
           .subscribe(this.model.extSearchTrigger().getOrThrow())
           .toBeDisposedBy(subscription);
-      } catch {}
+      } catch (e) {
+        this.operationErrorTrigger().next(e);
+      }
 
       fetchCodes
         .mapNonNilOrEmpty(v => v.error)
@@ -496,19 +502,19 @@ export namespace ViewModel {
       return this.model.operationErrorStream();
     }
 
-    public extensionForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+    public extensionForState = (state: ReadonlyState): Try<string> => {
       return this.model.extensionForState(state).map(v => '+' + v.callingCode);
     }
 
-    public numberForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+    public numberForState = (state: ReadonlyState): Try<string> => {
       return this.model.numberForState(state);
     }
 
-    public extSearchForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
-      return this.model.extSearchForState(state);
+    public extensionQueryForState = (state: ReadonlyState): Try<string> => {
+      return this.model.extensionQueryForState(state);
     }
 
-    public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CountryCode[]> {
+    public selectableCodesForState(state: ReadonlyState): Try<CountryCode[]> {
       return this.model.selectableCodesForState(state);
     }
 

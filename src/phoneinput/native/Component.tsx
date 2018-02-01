@@ -1,5 +1,14 @@
 import * as React from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+
+import {
+  FlatList,
+  ListRenderItemInfo,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
 import { Try } from 'javascriptutilities';
 import { Component as ComponentUtil } from 'react-base-utilities-js';
 import * as Base from './../base';
@@ -27,12 +36,48 @@ export class Self extends Base.Component.Self<Props.Type> {
   }
 
   protected createCountryCodeItemComponent(cc: CC): JSX.Element {
+    let props = this.props;
     let viewModel = this.viewModel;
+    let id = viewModel.id;
+    let style = props.style;
 
-    return <TouchableOpacity>
-      <Text>{viewModel.formatCountryCode(cc)}</Text>
+    let properties = Try.unwrap(props.properties)
+      .flatMap(v => Try.unwrap(v.phoneInput));
+
+    let Compulsory = Style.Compulsory;
+
+    return <TouchableOpacity
+      {...properties
+        .flatMap(v => Try.unwrap<Function>(v.countryCodeItemContainer))
+        .flatMap(v => v(id, cc)).value}
+      onPress={this.handleCountryCodeItemSelection.bind(this, cc)}
+      style={style.phoneInput.countryCodeItemContainer(id, cc)
+        .map(v => Object.assign({}, v, Compulsory.countryCodeItemContainer())).value}>
+      <Text
+        {...properties
+          .flatMap(v => Try.unwrap<Function>(v.countryCodeItem))
+          .flatMap(v => v(id, cc)).value}
+        style={style.phoneInput.countryCodeItem(id, cc).value}>
+          {viewModel.formatCountryCode(cc)}
+        </Text>
     </TouchableOpacity>;
   }
+
+  /**
+   * Render a country code item.
+   * @param {ListRenderItemInfo<CC>} item A ListRenderItemInfo instance.
+   * @returns {JSX.Element} A JSX Element instance.
+   */
+  private renderItem = (item: ListRenderItemInfo<CC>): JSX.Element => {
+    return this.createCountryCodeItemComponent(item.item);
+  }
+
+  /**
+   * Key selector for seletable country code list.
+   * @param {CC} item A CC instance.
+   * @returns {string} A string value.
+   */
+  private keyExtractor = (item: CC): string => item.code;
 
   public render(): JSX.Element {
     let props = this.props;
@@ -43,6 +88,8 @@ export class Self extends Base.Component.Self<Props.Type> {
     let properties = Try.unwrap(props.properties)
       .flatMap(v => Try.unwrap(v.phoneInput));
 
+    let Compulsory = Style.Compulsory;
+
     return <View
       {...properties
         .flatMap(v => Try.unwrap<Function>(v.mainContainer))
@@ -52,14 +99,16 @@ export class Self extends Base.Component.Self<Props.Type> {
         {...properties
           .flatMap(v => Try.unwrap<Function>(v.inputContainer))
           .flatMap(v => v(id)).value}
-        style={style.inputContainer(id).value}>
+        style={style.inputContainer(id)
+          .map(v => Object.assign({}, v, Compulsory.inputContainer())).value}>
         <TextInput
           {...properties
             .flatMap(v => Try.unwrap<Function>(v.extensionInputField))
             .flatMap(v => v(id)).value}
           autoCorrect={false}
           editable={false}
-          style={style.extensionInputField(id).value}
+          style={style.extensionInputField(id)
+            .map(v => Object.assign({}, v, Compulsory.extensionInput())).value}
           value={this.currentExtension().value}/>
         <TextInput
           {...properties
@@ -67,22 +116,36 @@ export class Self extends Base.Component.Self<Props.Type> {
             .flatMap(v => v(id)).value}
           autoCorrect={false}
           onChangeText={this.handleNumberInput.bind(this)}
-          style={style.phoneInputField(id).value}
+          style={style.phoneInputField(id)
+            .map(v => Object.assign({}, v, Compulsory.phoneInput())).value}
           value={this.currentPhoneNumber().value}/>
       </View>
       <View
         {...properties
           .flatMap(v => Try.unwrap<Function>(v.extensionSearchContainer))
           .flatMap(v => v(id)).value}
-        style={style.extensionSearchContainer(id).value}>
+        style={style.extensionSearchContainer(id)
+          .map(v => Object.assign({}, v, Compulsory.extensionSearchContainer())).value}>
         <TextInput
           {...properties
             .flatMap(v => Try.unwrap<Function>(v.extensionQueryField))
             .flatMap(v => v(id)).value}
           autoCorrect={false}
           onChangeText={this.handleExtensionQueryInput.bind(this)}
-          style={style.extensionQueryField(id).value}
+          style={style.extensionQueryField(id)
+            .map(v => Object.assign({}, v, Compulsory.extensionQueryInput())).value}
           value={this.currentExtensionQuery().value}/>
+        <FlatList
+          {...properties
+            .flatMap(v => Try.unwrap<Function>(v.selectableCountryCodeList))
+            .flatMap(v => v(id)).value}
+          data={this.currentSelectableCountryCodes().getOrElse([])}
+          extraData={this.state}
+          keyExtractor={this.keyExtractor.bind(this)}
+          numColumns={1}
+          renderItem={this.renderItem.bind(this)}
+          style={style.selectableCountryCodeList(id)
+            .map(v => Object.assign({}, v, Compulsory.selectableCountryCodeList())).value}/>
       </View>
     </View>;
   }
