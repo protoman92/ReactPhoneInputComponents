@@ -12,4 +12,4 @@ MVVM-based phone input components for React applications. With some basic stylin
 - **iOS**:
 <img width="375" alt="screen shot 2018-02-01 at 1 02 10 pm" src="https://user-images.githubusercontent.com/12141908/35662417-f9c26fb8-0752-11e8-8e48-2741405e8acd.png">
 
-Of course more sophisticated styling is supported as well (via dependency injection). Please check out https://github.com/protoman92/ReactCustomComponentDemo as well.
+Of course more sophisticated styling is supported as well (via dependency injection). Please check out https://github.com/protoman92/ReactCustomComponentDemo for a demonstration of MVVM architecture.
