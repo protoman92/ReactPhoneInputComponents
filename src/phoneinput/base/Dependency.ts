@@ -531,7 +531,7 @@ export namespace ViewModel {
     }
 
     public formatCountryCode(cc: CountryCode): string {
-      return `${cc.name} (${cc.code}), ${cc.callingCode}`;
+      return `${cc.name} (${cc.code}), +${cc.callingCode}`;
     }
 
     private ccSelectionTrigger = (): Observer<CountryCode> => {

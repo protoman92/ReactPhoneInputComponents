@@ -3,6 +3,7 @@ import { Try } from 'javascriptutilities';
 import {
   ScrollViewProperties,
   ScrollViewStyle,
+  TextInputProperties,
   TextProperties,
   TextStyle,
   ViewProperties,
@@ -98,7 +99,10 @@ export namespace Style {
      * @returns {ExtensionInputType} A ExtensionInputType instance.
      */
     export let extensionInput = (): ExtensionInputType => {
-      return { flexGrow: 1, textAlign: 'center' };
+      /// We set width 0 here to avoid this input field growing/shrinking when
+      /// different inputs are set (on Android). This property forces this input
+      /// field to grow based on the specified proportion.
+      return { flexGrow: 1, width: 0, textAlign: 'center' };
     };
 
     /**
@@ -107,7 +111,7 @@ export namespace Style {
      * @returns {PhoneInputType} A PhoneInputType instance.
      */
     export let phoneInput = (): PhoneInputType => {
-      return { flexGrow: 4, textAlign: 'center' };
+      return { flexGrow: 5, textAlign: 'center' };
     };
 
     /**
@@ -120,7 +124,7 @@ export namespace Style {
     };
 
     /**
-     * Create compulsory style for the extension query field. This style will 
+     * Create compulsory style for the extension query field. This style will
      * be added to provided style, if applicable.
      * @returns {ExtensionQueryType} A ExtensionQueryType instance.
      */
@@ -173,19 +177,19 @@ export namespace Properties {
    * Properties for a native phone input extension input component.
    * @extends {TextProperties} TextProperties extension.
    */
-  export interface ExtensionInputType extends TextProperties {}
+  export interface ExtensionInputType extends TextInputProperties {}
 
   /**
    * Properties for a native phone input component.
-   * @extends {TextProperties} TextProperties extension.
+   * @extends {TextInputProperties} TextInputProperties extension.
    */
-  export interface PhoneInputType extends TextProperties {}
+  export interface PhoneInputType extends TextInputProperties {}
 
   /**
    * Properties for a native phone input extension query component.
-   * @extends {TextProperties} TextProperties extension.
+   * @extends {TextInputProperties} TextInputProperties extension.
    */
-  export interface ExtensionQueryType extends TextProperties {}
+  export interface ExtensionQueryType extends TextInputProperties {}
 
   /**
    * Properties for a native phone input extension search container component.
@@ -215,15 +219,15 @@ export namespace Properties {
    * Properties selector for a native phone input component.
    */
   export interface SelectorType {
-    mainContainer?(id: string): Try<ContainerType>;
-    inputContainer?(id: string): Try<InputContainerType>;
-    extensionInputField?(id: string): Try<ExtensionInputType>;
-    phoneInputField?(id: string): Try<PhoneInputType>;
-    extensionQueryField?(id: string): Try<ExtensionQueryType>;
-    extensionSearchContainer?(id: string): Try<ExtensionSearchContainerType>;
-    selectableCountryCodeList?(id: string): Try<SelectableCountryCodeType>;
-    countryCodeItem?(id: string, cc: CC): Try<CountryCodeItemType>;
-    countryCodeItemContainer?(id: string, cc: CC): Try<CountryCodeItemContainerType>;
+    mainContainer(id: string): Try<ContainerType>;
+    inputContainer(id: string): Try<InputContainerType>;
+    extensionInputField(id: string): Try<ExtensionInputType>;
+    phoneInputField(id: string): Try<PhoneInputType>;
+    extensionQueryField(id: string): Try<ExtensionQueryType>;
+    extensionSearchContainer(id: string): Try<ExtensionSearchContainerType>;
+    selectableCountryCodeList(id: string): Try<SelectableCountryCodeType>;
+    countryCodeItem(id: string, cc: CC): Try<CountryCodeItemType>;
+    countryCodeItemContainer(id: string, cc: CC): Try<CountryCodeItemContainerType>;
   }
 
   /**

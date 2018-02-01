@@ -47,16 +47,12 @@ export class Self extends Base.Component.Self<Props.Type> {
     let Compulsory = Style.Compulsory;
 
     return <TouchableOpacity
-      {...properties
-        .flatMap(v => Try.unwrap<Function>(v.countryCodeItemContainer))
-        .flatMap(v => v(id, cc)).value}
+      {...properties.flatMap(v => v.countryCodeItemContainer(id, cc)).value}
       onPress={this.handleCountryCodeItemSelection.bind(this, cc)}
       style={style.phoneInput.countryCodeItemContainer(id, cc)
         .map(v => Object.assign({}, v, Compulsory.countryCodeItemContainer())).value}>
       <Text
-        {...properties
-          .flatMap(v => Try.unwrap<Function>(v.countryCodeItem))
-          .flatMap(v => v(id, cc)).value}
+        {...properties.flatMap(v => v.countryCodeItem(id, cc)).value}
         style={style.phoneInput.countryCodeItem(id, cc).value}>
           {viewModel.formatCountryCode(cc)}
         </Text>
@@ -88,32 +84,24 @@ export class Self extends Base.Component.Self<Props.Type> {
     let properties = Try.unwrap(props.properties)
       .flatMap(v => Try.unwrap(v.phoneInput));
 
-    let Compulsory = Style.Compulsory;
+    let Compulsory = Style.Compulsory; 
 
     return <View
-      {...properties
-        .flatMap(v => Try.unwrap<Function>(v.mainContainer))
-        .flatMap(v => v(id)).value}
+      {...properties.flatMap(v => v.mainContainer(id)).value}
       style={style.mainContainer(id).value}>
       <View
-        {...properties
-          .flatMap(v => Try.unwrap<Function>(v.inputContainer))
-          .flatMap(v => v(id)).value}
+        {...properties.flatMap(v => v.inputContainer(id)).value}
         style={style.inputContainer(id)
           .map(v => Object.assign({}, v, Compulsory.inputContainer())).value}>
         <TextInput
-          {...properties
-            .flatMap(v => Try.unwrap<Function>(v.extensionInputField))
-            .flatMap(v => v(id)).value}
+          {...properties.flatMap(v => v.extensionInputField(id)).value}
           autoCorrect={false}
           editable={false}
           style={style.extensionInputField(id)
             .map(v => Object.assign({}, v, Compulsory.extensionInput())).value}
           value={this.currentExtension().value}/>
         <TextInput
-          {...properties
-            .flatMap(v => Try.unwrap<Function>(v.phoneInputField))
-            .flatMap(v => v(id)).value}
+          {...properties.flatMap(v => v.phoneInputField(id)).value}
           autoCorrect={false}
           onChangeText={this.handleNumberInput.bind(this)}
           style={style.phoneInputField(id)
@@ -121,24 +109,18 @@ export class Self extends Base.Component.Self<Props.Type> {
           value={this.currentPhoneNumber().value}/>
       </View>
       <View
-        {...properties
-          .flatMap(v => Try.unwrap<Function>(v.extensionSearchContainer))
-          .flatMap(v => v(id)).value}
+        {...properties.flatMap(v => v.extensionSearchContainer(id)).value}
         style={style.extensionSearchContainer(id)
           .map(v => Object.assign({}, v, Compulsory.extensionSearchContainer())).value}>
         <TextInput
-          {...properties
-            .flatMap(v => Try.unwrap<Function>(v.extensionQueryField))
-            .flatMap(v => v(id)).value}
+          {...properties.flatMap(v => v.extensionQueryField(id)).value}
           autoCorrect={false}
           onChangeText={this.handleExtensionQueryInput.bind(this)}
           style={style.extensionQueryField(id)
             .map(v => Object.assign({}, v, Compulsory.extensionQueryInput())).value}
           value={this.currentExtensionQuery().value}/>
         <FlatList
-          {...properties
-            .flatMap(v => Try.unwrap<Function>(v.selectableCountryCodeList))
-            .flatMap(v => v(id)).value}
+          {...properties.flatMap(v => v.selectableCountryCodeList(id)).value}
           data={this.currentSelectableCountryCodes().getOrElse([])}
           extraData={this.state}
           keyExtractor={this.keyExtractor.bind(this)}
