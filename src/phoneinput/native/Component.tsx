@@ -45,36 +45,43 @@ export class Self extends Base.Component.Self<Props.Type> {
 
     return <View
       {...properties
-        .flatMap(v => Try.unwrap<Function>(v.containerProperties))
+        .flatMap(v => Try.unwrap<Function>(v.mainContainer))
         .flatMap(v => v(id)).value}
-      style={style.containerStyle(id).value}>
+      style={style.mainContainer(id).value}>
       <View
         {...properties
-          .flatMap(v => Try.unwrap<Function>(v.inputContainerProperties))
+          .flatMap(v => Try.unwrap<Function>(v.inputContainer))
           .flatMap(v => v(id)).value}
-        style={style.inputContainerStyle(id).value}>
+        style={style.inputContainer(id).value}>
         <TextInput
           {...properties
-            .flatMap(v => Try.unwrap<Function>(v.extensionInputProperties))
+            .flatMap(v => Try.unwrap<Function>(v.extensionInputField))
             .flatMap(v => v(id)).value}
+          autoCorrect={false}
           editable={false}
-          style={style.extensionInputStyle(id).value}
+          style={style.extensionInputField(id).value}
           value={this.currentExtension().value}/>
         <TextInput
           {...properties
-            .flatMap(v => Try.unwrap<Function>(v.phoneInputProperties))
+            .flatMap(v => Try.unwrap<Function>(v.phoneInputField))
             .flatMap(v => v(id)).value}
+          autoCorrect={false}
           onChangeText={this.handleNumberInput.bind(this)}
-          style={style.phoneInputStyle(id).value}
+          style={style.phoneInputField(id).value}
           value={this.currentPhoneNumber().value}/>
       </View>
-      <View>
+      <View
+        {...properties
+          .flatMap(v => Try.unwrap<Function>(v.extensionSearchContainer))
+          .flatMap(v => v(id)).value}
+        style={style.extensionSearchContainer(id).value}>
         <TextInput
           {...properties
-            .flatMap(v => Try.unwrap<Function>(v.extensionQueryProperties))
+            .flatMap(v => Try.unwrap<Function>(v.extensionQueryField))
             .flatMap(v => v(id)).value}
+          autoCorrect={false}
           onChangeText={this.handleExtensionQueryInput.bind(this)}
-          style={style.extensionQueryStyle(id).value}
+          style={style.extensionQueryField(id).value}
           value={this.currentExtensionQuery().value}/>
       </View>
     </View>;

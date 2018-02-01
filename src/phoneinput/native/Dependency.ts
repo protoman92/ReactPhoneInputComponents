@@ -33,6 +33,12 @@ export namespace Style {
   export interface PhoneInputType extends TextStyle {}
 
   /**
+   * Style for a native phone input extension search container component.
+   * @extends {ViewStyle} ViewStyle extension.
+   */
+  export interface ExtensionSearchContainerType extends ViewStyle {}
+
+  /**
    * Style for a native phone input extension query component.
    * @extends {TextStyle} TextStyle extension.
    */
@@ -42,11 +48,12 @@ export namespace Style {
    * Style selector for a native phone input component.
    */
   export interface SelectorType {
-    containerStyle(id: string): Try<ContainerType>;
-    inputContainerStyle(id: string): Try<InputContainerType>;
-    extensionInputStyle(id: string): Try<ExtensionInputType>;
-    phoneInputStyle(id: string): Try<PhoneInputType>;
-    extensionQueryStyle(id: string): Try<ExtensionQueryType>;
+    mainContainer(id: string): Try<ContainerType>;
+    inputContainer(id: string): Try<InputContainerType>;
+    extensionInputField(id: string): Try<ExtensionInputType>;
+    phoneInputField(id: string): Try<PhoneInputType>;
+    extensionQueryField(id: string): Try<ExtensionQueryType>;
+    extensionSearchContainer(id: string): Try<ExtensionQueryType>;
   }
 
   /**
@@ -89,14 +96,21 @@ export namespace Properties {
   export interface ExtensionQueryType extends TextProperties {}
 
   /**
+   * Properties for a native phone input extension search container component.
+   * @extends {ViewProperties} ViewProperties extension.
+   */
+  export interface ExtensionSearchContainerType extends ViewProperties {}
+
+  /**
    * Properties selector for a native phone input component.
    */
   export interface SelectorType {
-    containerProperties?(id: string): Try<ContainerType>;
-    inputContainerProperties?(id: string): Try<InputContainerType>;
-    extensionInputProperties?(id: string): Try<ExtensionInputType>;
-    phoneInputProperties?(id: string): Try<PhoneInputType>;
-    extensionQueryProperties?(id: string): Try<ExtensionQueryType>;
+    mainContainer?(id: string): Try<ContainerType>;
+    inputContainer?(id: string): Try<InputContainerType>;
+    extensionInputField?(id: string): Try<ExtensionInputType>;
+    phoneInputField?(id: string): Try<PhoneInputType>;
+    extensionQueryField?(id: string): Try<ExtensionQueryType>;
+    extensionSearchContainer?(id: string): Try<ExtensionSearchContainerType>;
   }
 
   /**
