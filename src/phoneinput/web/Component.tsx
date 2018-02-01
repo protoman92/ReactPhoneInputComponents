@@ -13,7 +13,7 @@ export namespace Props {
    * @extends {Base.Component.Props.Type} Base component props extension.
    */
   export interface Type extends Base.Component.Props.Type {
-    identity?: Identity.ProviderType;
+    identityProvider?: Identity.ProviderType;
   }
 }
 
@@ -46,7 +46,7 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
   protected createCountryCodeItemComponent(cc: CC): JSX.Element {
     let vm = this.viewModel;
 
-    let identity = Try.unwrap(this.props.identity)
+    let identity = Try.unwrap(this.props.identityProvider)
       .flatMap(v => Try.unwrap(v.phoneInput))
       .map(v => v.countryCode_item_identity(vm.id));
 
@@ -62,7 +62,7 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
     let vm = this.viewModel;
     let id = vm.id;
 
-    let identity = Try.unwrap(this.props.identity)
+    let identity = Try.unwrap(this.props.identityProvider)
       .flatMap(v => Try.unwrap(v.phoneInput));
 
     return <div {...identity.flatMap(v => v.identity(id)).value}>

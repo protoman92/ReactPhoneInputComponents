@@ -10,6 +10,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { TouchableButton } from 'react-native-basic-components';
 import { CountryCode as CC } from '../base/Dependency';
 
 export namespace Style {
@@ -56,19 +57,6 @@ export namespace Style {
   export interface SelectableCountryCodeListType extends ScrollViewStyle {}
 
   /**
-   * Style for a native phone input country code item container component. This
-   * is the component that wraps country code items to provide touch recognition.
-   * @extends {ViewStyle} ViewStyle extension.
-   */
-  export interface CountryCodeItemContainerType extends ViewStyle {}
-
-  /**
-   * Style for a native phone input selectable code item component.
-   * @extends {TextStyle} TextStyle extension.
-   */
-  export interface CountryCodeItemType extends TextStyle {}
-
-  /**
    * Style selector for a native phone input component.
    */
   export interface SelectorType {
@@ -79,8 +67,6 @@ export namespace Style {
     extensionQueryField(id: string): Try<ExtensionQueryType>;
     extensionSearchContainer(id: string): Try<ExtensionQueryType>;
     selectableCountryCodeList(id: string): Try<SelectableCountryCodeListType>;
-    countryCodeItem(id: string, cc: CC): Try<CountryCodeItemType>;
-    countryCodeItemContainer(id: string, cc: CC): Try<CountryCodeItemContainerType>;
   }
 
   export namespace Compulsory {
@@ -141,21 +127,14 @@ export namespace Style {
       /// We need to set height to 0 to force wrap the list.
       return { height: 0, flexDirection: 'column' };
     };
-
-    /**
-     * Create compulsory style for the country code item container. This style
-     * will be added to provided style, if applicable.
-     * @returns {ExtensionQueryType} A ExtensionQueryType instance.
-     */
-    export let countryCodeItemContainer = (): CountryCodeItemContainerType => {
-      return { justifyContent: 'center' };
-    };
   }
 
   /**
    * Provide style selector for a native phone input component.
+   * @extends {TouchableButton.Style.ProviderType} Touchable button style
+   * provider extension.
    */
-  export interface ProviderType {
+  export interface ProviderType extends TouchableButton.Style.ProviderType {
     phoneInput: Readonly<SelectorType>;
   }
 }
@@ -232,8 +211,10 @@ export namespace Properties {
 
   /**
    * Provide properties selector for a native phone input component.
+   * @extends {TouchableButton.Properties.ProviderType} Touchable button
+   * properties provider extension.
    */
-  export interface ProviderType {
+  export interface ProviderType extends TouchableButton.Properties.ProviderType {
     phoneInput?: Readonly<SelectorType>;
   }
 }

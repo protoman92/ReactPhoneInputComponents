@@ -1,6 +1,6 @@
 {
   "name": "react-phone-input-components",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MVVM-based phone input components for React applications.",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
@@ -25,10 +25,8 @@
   },
   "homepage": "https://github.com/protoman92/ReactPhoneInputComponents#readme",
   "dependencies": {
-    "@types/react-native": "^0.52.5",
-    "react-base-utilities-js": "^1.0.1",
     "react-error-display-components": "^1.0.0",
-    "react-native": "^0.52.2"
+    "react-native-basic-components": "^1.0.3"
   },
   "devDependencies": {
     "@types/enzyme": "^3.1.8",

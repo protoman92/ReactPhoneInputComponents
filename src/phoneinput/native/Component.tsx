@@ -3,14 +3,13 @@ import * as React from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
-  Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
 import { Try } from 'javascriptutilities';
 import { Component as ComponentUtil } from 'react-base-utilities-js';
+import { TouchableButton } from 'react-native-basic-components';
 import * as Base from './../base';
 import { CountryCode as CC } from './../base/Dependency';
 import { Properties, Style } from './Dependency';
@@ -21,8 +20,8 @@ export namespace Props {
    * @extends {Base.Component.Props.Type} Base component props extension.
    */
   export interface Type extends Base.Component.Props.Type {
-    properties?: Properties.ProviderType;
-    style: Style.ProviderType;
+    propertiesProvider?: Properties.ProviderType;
+    styleProvider: Style.ProviderType;
   }
 }
 
@@ -39,24 +38,16 @@ export class Self extends Base.Component.Self<Props.Type> {
     let props = this.props;
     let viewModel = this.viewModel;
     let id = viewModel.id;
-    let style = props.style;
 
-    let properties = Try.unwrap(props.properties)
-      .flatMap(v => Try.unwrap(v.phoneInput));
+    let buttonProps: TouchableButton.Component.Props.Type = {
+      id: id,
+      propertiesProvider: props.propertiesProvider,
+      styleProvider: props.styleProvider,
+      onPress: this.handleCountryCodeItemSelection.bind(this, cc),
+      value: viewModel.formatCountryCode(cc),
+    };
 
-    let Compulsory = Style.Compulsory;
-
-    return <TouchableOpacity
-      {...properties.flatMap(v => v.countryCodeItemContainer(id, cc)).value}
-      onPress={this.handleCountryCodeItemSelection.bind(this, cc)}
-      style={style.phoneInput.countryCodeItemContainer(id, cc)
-        .map(v => Object.assign({}, v, Compulsory.countryCodeItemContainer())).value}>
-      <Text
-        {...properties.flatMap(v => v.countryCodeItem(id, cc)).value}
-        style={style.phoneInput.countryCodeItem(id, cc).value}>
-          {viewModel.formatCountryCode(cc)}
-        </Text>
-    </TouchableOpacity>;
+    return <TouchableButton.Component.Self {...buttonProps}/>;
   }
 
   /**
@@ -77,11 +68,11 @@ export class Self extends Base.Component.Self<Props.Type> {
 
   public render(): JSX.Element {
     let props = this.props;
-    let style = props.style.phoneInput;
+    let style = props.styleProvider.phoneInput;
     let viewModel = this.viewModel;
     let id = viewModel.id;
 
-    let properties = Try.unwrap(props.properties)
+    let properties = Try.unwrap(props.propertiesProvider)
       .flatMap(v => Try.unwrap(v.phoneInput));
 
     let Compulsory = Style.Compulsory; 
