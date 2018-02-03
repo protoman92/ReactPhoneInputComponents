@@ -47,7 +47,7 @@ export namespace Action {
    * provider extension.
    */
   export interface ProviderType extends ErrorDisplay.Base.Action.ProviderType {
-    phoneInput: Readonly<Type>;
+    readonly phoneInput: Type;
   }
 
   /**
@@ -87,8 +87,8 @@ export namespace Provider {
    * @extends {ErrorDisplay.Base.Provider.Type} Error display provider extension.
    */
   export interface Type extends Store.Provider.Type, ErrorDisplay.Base.Provider.Type {
-    action: Readonly<Action.ProviderType>;
-    countryCodes: Readonly<CountryCodeType>;
+    readonly action: Action.ProviderType;
+    readonly countryCodes: CountryCodeType;
   }
 }
 
@@ -98,13 +98,13 @@ export namespace Model {
    * @extends {ErrorDisplay.Base.Model.Type} Error display model extension.
    */
   export interface Type extends ErrorDisplay.Base.Model.Type {
-    id: Readonly<string>;
-    substatePath: Readonly<Try<string>>;
-    fullExtensionPath: Readonly<Try<string>>;
-    fullExtSearchValuePath: Readonly<Try<string>>;
-    fullNumberPath: Readonly<Try<string>>;
-    fullSelectableCodesPath: Readonly<Try<string>>;
-    fullAllCountryCodesPath: Readonly<Try<string>>;
+    readonly id: string;
+    readonly substatePath: Try<string>;
+    readonly fullExtensionPath: Try<string>;
+    readonly fullExtSearchValuePath: Try<string>;
+    readonly fullNumberPath: Try<string>;
+    readonly fullSelectableCodesPath: Try<string>;
+    readonly fullAllCountryCodesPath: Try<string>;
     fetchCodes<Prev>(prev: Try<Prev>): Observable<Try<CountryCode[]>>;
     allCountryCodesTrigger(): Try<Observer<Nullable<CountryCode[]>>>;
     allCountryCodesStream(): Observable<Try<CountryCode[]>>;
@@ -146,31 +146,31 @@ export namespace Model {
     public readonly id: string;
     private readonly provider: Provider.Type;
 
-    public get substatePath(): Readonly<Try<string>> {
+    public get substatePath(): Try<string> {
       return this.provider.action.phoneInput.substatePath(this.id);
     }
 
-    public get fullExtensionPath(): Readonly<Try<string>> {
+    public get fullExtensionPath(): Try<string> {
       return this.provider.action.phoneInput.fullExtensionPath(this.id);
     }
 
-    public get fullNumberPath(): Readonly<Try<string>> {
+    public get fullNumberPath(): Try<string> {
       return this.provider.action.phoneInput.fullNumberPath(this.id);
     }
 
-    public get fullExtSearchValuePath(): Readonly<Try<string>> {
+    public get fullExtSearchValuePath(): Try<string> {
       return this.provider.action.phoneInput.fullExtSearchPath(this.id);
     }
 
-    public get fullSelectableCodesPath(): Readonly<Try<string>> {
+    public get fullSelectableCodesPath(): Try<string> {
       return this.provider.action.phoneInput.fullSelectableCodesPath(this.id);
     }
 
-    public get fullAllCountryCodesPath(): Readonly<Try<string>> {
+    public get fullAllCountryCodesPath(): Try<string> {
       return this.provider.action.phoneInput.fullAllCountryCodesPath(this.id);
     }
 
-    private get extensionValuePath(): Readonly<Try<string>> {
+    private get extensionValuePath(): Try<string> {
       let separator = this.provider.substateSeparator;
 
       return this.fullExtensionPath
@@ -178,7 +178,7 @@ export namespace Model {
         .map(v => v[1]);
     }
 
-    private get numberValuePath(): Readonly<Try<string>> {
+    private get numberValuePath(): Try<string> {
       let separator = this.provider.substateSeparator;
 
       return this.fullNumberPath
@@ -186,7 +186,7 @@ export namespace Model {
         .map(v => v[1]);
     }
 
-    private get extSearchValuePath(): Readonly<Try<string>> {
+    private get extSearchValuePath(): Try<string> {
       let separator = this.provider.substateSeparator;
 
       return this.fullExtSearchValuePath
@@ -194,7 +194,7 @@ export namespace Model {
         .map(v => v[1]);
     }
 
-    private get selectableCodesValuePath(): Readonly<Try<string>> {
+    private get selectableCodesValuePath(): Try<string> {
       let separator = this.provider.substateSeparator;
 
       return this.fullSelectableCodesPath
@@ -368,11 +368,11 @@ export namespace ViewModel {
    * @extends {ErrorDisplay.Base.ViewModel.Type} Error VM extension.
    */
   export interface Type extends MVVM.ViewModel.ReduxType, ErrorDisplay.Base.ViewModel.Type {
-    id: Readonly<string>;
+    readonly id: string;
     extensionForState(state: ReadonlyState): Try<string>;
     numberForState(state: ReadonlyState): Try<string>;
     extensionQueryForState(state: ReadonlyState): Try<string>;
-    selectableCodesForState(state: Readonly<StateType<any>>): Try<CountryCode[]>;
+    selectableCodesForState(state: ReadonlyState): Try<CountryCode[]>;
     triggerNumberInput(value: Nullable<string>): void;
     triggerExtensionQueryInput(value: Nullable<string>): void;
     triggerSelectedCountryCode(code: Nullable<CountryCode>): void;
@@ -407,7 +407,7 @@ export namespace ViewModel {
       return undefined;
     }
 
-    public get id(): Readonly<string> {
+    public get id(): string {
       return this.model.id;
     }
 
@@ -468,7 +468,7 @@ export namespace ViewModel {
       this.subscription.unsubscribe();
     }
 
-    public stateStream = (): Observable<Try<S.Self<any>>> => {
+    public stateStream = (): Observable<Try<S.Type<any>>> => {
       try {
         let substatePath = this.model.substatePath.getOrThrow();
 

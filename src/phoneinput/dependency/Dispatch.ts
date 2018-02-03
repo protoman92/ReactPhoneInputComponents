@@ -36,8 +36,8 @@ export namespace Action {
   export interface ProviderType extends
     Base.Action.ProviderType,
     ErrorDisplay.Dispatch.Action.ProviderType {
-    error: ErrorDisplay.Dispatch.Action.CreatorType;
-    phoneInput: Readonly<CreatorType>;
+    readonly error: ErrorDisplay.Dispatch.Action.CreatorType;
+    readonly phoneInput: CreatorType;
   }
 
   /**
@@ -101,7 +101,7 @@ export namespace Reducer {
    * @returns {DispatchReducer<any>} A DispatchReducer instance.
    */
   export let createDefault = (): DispatchReducer<any> => {
-    return (state: S.Self<any>, action: ActionType): S.Self<any> => {
+    return (state: S.Type<any>, action: ActionType): S.Type<any> => {
       if (Action.isInstance(action)) {
         return state.updatingValue(action.fullValuePath, action.payload);
       } else {
@@ -119,8 +119,8 @@ export namespace Provider {
    * extension.
    */
   export interface Type extends Base.Provider.Type, ErrorDisplay.Dispatch.Provider.Type {
-    action: Readonly<Action.ProviderType>;
-    store: Store.Dispatch.Type;
+    readonly action: Action.ProviderType;
+    readonly store: Store.Dispatch.Type;
   }
 }
 
@@ -146,31 +146,31 @@ export namespace Model {
     private readonly numberObserver: Try<Observer<Nullable<string>>>;
     private readonly selectableObserver: Try<Observer<Nullable<CC[]>>>;
 
-    public get id(): Readonly<string> {
+    public get id(): string {
       return this.baseModel.id;
     }
 
-    public get substatePath(): Readonly<Try<string>> {
+    public get substatePath(): Try<string> {
       return this.baseModel.substatePath;
     }
 
-    public get fullExtensionPath(): Readonly<Try<string>> {
+    public get fullExtensionPath(): Try<string> {
       return this.baseModel.fullExtensionPath;
     }
 
-    public get fullNumberPath(): Readonly<Try<string>> {
+    public get fullNumberPath(): Try<string> {
       return this.baseModel.fullNumberPath;
     }
 
-    public get fullExtSearchValuePath(): Readonly<Try<string>> {
+    public get fullExtSearchValuePath(): Try<string> {
       return this.baseModel.fullExtSearchValuePath;
     }
 
-    public get fullSelectableCodesPath(): Readonly<Try<string>> {
+    public get fullSelectableCodesPath(): Try<string> {
       return this.baseModel.fullSelectableCodesPath;
     }
 
-    public get fullAllCountryCodesPath(): Readonly<Try<string>> {
+    public get fullAllCountryCodesPath(): Try<string> {
       return this.baseModel.fullAllCountryCodesPath;
     }
 

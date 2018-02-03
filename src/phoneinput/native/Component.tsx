@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import { Try } from 'javascriptutilities';
+import { State as S } from 'type-safe-state-js';
 import { Component as ComponentUtil } from 'react-base-utilities-js';
 import { TouchableButton } from 'react-native-basic-components';
 import * as Base from './../base';
@@ -20,8 +21,8 @@ export namespace Props {
    * @extends {Base.Component.Props.Type} Base component props extension.
    */
   export interface Type extends Base.Component.Props.Type {
-    propertiesProvider?: Properties.ProviderType;
-    styleProvider: Style.ProviderType;
+    readonly propertiesProvider?: Properties.ProviderType;
+    readonly styleProvider: Style.ProviderType;
   }
 }
 
@@ -30,7 +31,7 @@ export namespace Props {
  * @extends {Base.Component.Self<Props.Type>} Base component extension.
  */
 export class Self extends Base.Component.Self<Props.Type> {
-  public get platform(): Readonly<ComponentUtil.Platform.Case> {
+  public get platform(): ComponentUtil.Platform.Case {
     return ComponentUtil.Platform.Case.NATIVE_COMMON;
   }
 
@@ -52,11 +53,11 @@ export class Self extends Base.Component.Self<Props.Type> {
 
   /**
    * Render a country code item.
-   * @param {ListRenderItemInfo<CC>} item A ListRenderItemInfo instance.
+   * @param {ListRenderItemInfo<CC>} info A ListRenderItemInfo instance.
    * @returns {JSX.Element} A JSX Element instance.
    */
-  private renderItem = (item: ListRenderItemInfo<CC>): JSX.Element => {
-    return this.createCountryCodeItemComponent(item.item);
+  private renderItem = (info: ListRenderItemInfo<CC>): JSX.Element => {
+    return this.createCountryCodeItemComponent(info.item);
   }
 
   /**
@@ -71,11 +72,12 @@ export class Self extends Base.Component.Self<Props.Type> {
     let style = props.styleProvider.phoneInput;
     let viewModel = this.viewModel;
     let id = viewModel.id;
+    let state = S.fromKeyValue(this.state);
 
     let properties = Try.unwrap(props.propertiesProvider)
       .flatMap(v => Try.unwrap(v.phoneInput));
 
-    let Compulsory = Style.Compulsory; 
+    let Compulsory = Style.Compulsory;
 
     return <View
       {...properties.flatMap(v => v.mainContainer(id)).value}
@@ -90,14 +92,14 @@ export class Self extends Base.Component.Self<Props.Type> {
           editable={false}
           style={style.extensionInputField(id)
             .map(v => Object.assign({}, v, Compulsory.extensionInput())).value}
-          value={this.currentExtension().value}/>
+          value={this.currentExtension(state).value}/>
         <TextInput
           {...properties.flatMap(v => v.phoneInputField(id)).value}
           autoCorrect={false}
           onChangeText={this.handleNumberInput.bind(this)}
           style={style.phoneInputField(id)
             .map(v => Object.assign({}, v, Compulsory.phoneInput())).value}
-          value={this.currentPhoneNumber().value}/>
+          value={this.currentPhoneNumber(state).value}/>
       </View>
       <View
         {...properties.flatMap(v => v.extensionSearchContainer(id)).value}
@@ -109,10 +111,10 @@ export class Self extends Base.Component.Self<Props.Type> {
           onChangeText={this.handleExtensionQueryInput.bind(this)}
           style={style.extensionQueryField(id)
             .map(v => Object.assign({}, v, Compulsory.extensionQueryInput())).value}
-          value={this.currentExtensionQuery().value}/>
+          value={this.currentExtensionQuery(state).value}/>
         <FlatList
           {...properties.flatMap(v => v.selectableCountryCodeList(id)).value}
-          data={this.currentSelectableCountryCodes().getOrElse([])}
+          data={this.currentSelectableCountryCodes(state).getOrElse([])}
           extraData={this.state}
           keyExtractor={this.keyExtractor.bind(this)}
           numColumns={1}

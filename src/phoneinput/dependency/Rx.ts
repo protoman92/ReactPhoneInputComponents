@@ -32,8 +32,8 @@ export namespace Action {
   export interface ProviderType extends
     Base.Action.ProviderType,
     ErrorDisplay.Rx.Action.ProviderType {
-    error: ErrorDisplay.Rx.Action.Type;
-    phoneInput: Readonly<Type>;
+    readonly error: ErrorDisplay.Rx.Action.Type;
+    readonly phoneInput: Type;
   }
 
   /**
@@ -129,7 +129,7 @@ export namespace Provider {
    * @extends {Base.Provider.Type} Base provider extension.
    */
   export interface Type extends Base.Provider.Type, ErrorDisplay.Rx.Provider.Type {
-    action: Action.ProviderType;
+    readonly action: Action.ProviderType;
   }
 }
 
@@ -149,31 +149,31 @@ export namespace Model {
     private readonly baseModel: Base.Model.Type;
     private readonly errorModel: ErrorDisplay.Base.Model.Type;
 
-    public get id(): Readonly<string> {
+    public get id(): string {
       return this.baseModel.id;
     }
 
-    public get substatePath(): Readonly<Try<string>> {
+    public get substatePath(): Try<string> {
       return this.baseModel.substatePath;
     }
 
-    public get fullExtensionPath(): Readonly<Try<string>> {
+    public get fullExtensionPath(): Try<string> {
       return this.baseModel.fullExtensionPath;
     }
 
-    public get fullNumberPath(): Readonly<Try<string>> {
+    public get fullNumberPath(): Try<string> {
       return this.baseModel.fullNumberPath;
     }
 
-    public get fullExtSearchValuePath(): Readonly<Try<string>> {
+    public get fullExtSearchValuePath(): Try<string> {
       return this.baseModel.fullExtSearchValuePath;
     }
 
-    public get fullSelectableCodesPath(): Readonly<Try<string>> {
+    public get fullSelectableCodesPath(): Try<string> {
       return this.baseModel.fullSelectableCodesPath;
     }
 
-    public get fullAllCountryCodesPath(): Readonly<Try<string>> {
+    public get fullAllCountryCodesPath(): Try<string> {
       return this.baseModel.fullAllCountryCodesPath;
     }
 

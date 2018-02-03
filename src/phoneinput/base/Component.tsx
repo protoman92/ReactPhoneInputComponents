@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 import { Component } from 'react';
 import { Nullable, Try } from 'javascriptutilities';
-import { StateType } from 'type-safe-state-js';
+import { State as S, StateType } from 'type-safe-state-js';
 import { Component as ComponentUtil } from 'react-base-utilities-js';
 import { ViewModel } from './Dependency';
 import { CountryCode as CC } from './Dependency';
@@ -11,7 +11,7 @@ export namespace Props {
    * Base props type for phone input component.
    */
   export interface Type {
-    viewModel: Readonly<ViewModel.Type>;
+    readonly viewModel: ViewModel.Type;
   }
 }
 
@@ -74,20 +74,20 @@ export abstract class Self<P extends Props.Type> extends
     return codes.getOrElse([]).map(v => this.createCountryCodeItemComponent(v));
   }
 
-  protected currentExtension(): Try<string> {
-    return this.viewModel.extensionForState(this.state);
+  protected currentExtension(state: S.Type<any>): Try<string> {
+    return this.viewModel.extensionForState(state);
   }
 
-  protected currentPhoneNumber(): Try<string> {
-    return this.viewModel.numberForState(this.state);
+  protected currentPhoneNumber(state: S.Type<any>): Try<string> {
+    return this.viewModel.numberForState(state);
   }
 
-  protected currentExtensionQuery(): Try<string> {
-    return this.viewModel.extensionQueryForState(this.state);
+  protected currentExtensionQuery(state: S.Type<any>): Try<string> {
+    return this.viewModel.extensionQueryForState(state);
   }
 
-  protected currentSelectableCountryCodes(): Try<CC[]> {
-    return this.viewModel.selectableCodesForState(this.state);
+  protected currentSelectableCountryCodes(state: S.Type<any>): Try<CC[]> {
+    return this.viewModel.selectableCodesForState(state);
   }
 
   /**

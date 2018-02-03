@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ChangeEvent } from 'react';
 import { Try } from 'javascriptutilities';
+import { State as S } from 'type-safe-state-js';
 import { Component as ComponentUtil, Data } from 'react-base-utilities-js';
 import * as Base from './../base';
 import { Identity } from './Dependency';
@@ -13,7 +14,7 @@ export namespace Props {
    * @extends {Base.Component.Props.Type} Base component props extension.
    */
   export interface Type extends Base.Component.Props.Type {
-    identityProvider?: Identity.ProviderType;
+    readonly identityProvider?: Identity.ProviderType;
   }
 }
 
@@ -23,7 +24,7 @@ export namespace Props {
  * @extends {Base.Component.Self<Props.Type>} Base component extension.
  */
 export abstract class Self extends Base.Component.Self<Props.Type> {
-  public get platform(): Readonly<ComponentUtil.Platform.Case> {
+  public get platform(): ComponentUtil.Platform.Case {
     return ComponentUtil.Platform.Case.WEB;
   }
 
@@ -61,6 +62,7 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
   public render(): JSX.Element {
     let vm = this.viewModel;
     let id = vm.id;
+    let state = S.fromKeyValue(this.state);
 
     let identity = Try.unwrap(this.props.identityProvider)
       .flatMap(v => Try.unwrap(v.phoneInput));
@@ -71,19 +73,19 @@ export abstract class Self extends Base.Component.Self<Props.Type> {
           disabled={true}
           onChange={this.handleExtSearchInputEvent.bind(this)}
           type={Data.InputType.Web.Case.TEXT}
-          value={this.currentExtension().value}
+          value={this.currentExtension(state).value}
           {...identity.flatMap(v => v.extension_identity(id)).value}/>
         <input
           onChange={this.handleNumberInputEvent.bind(this)}
           type={Data.InputType.Web.Case.TEXT}
-          value={this.currentPhoneNumber().value}
+          value={this.currentPhoneNumber(state).value}
           {...identity.flatMap(v => v.number_identity(id)).value}/>
       </div>
       <div {...identity.flatMap(v => v.extSearchCT_identity(id)).value}>
         <input
           onChange={this.handleExtSearchInputEvent.bind(this)}
           type={Data.InputType.Web.Case.TEXT}
-          value={this.currentExtensionQuery().value}
+          value={this.currentExtensionQuery(state).value}
           {...identity.flatMap(v => v.extSearch_identity(id)).value}/>
         <div {...identity.flatMap(v => v.countryCode_list_identity(id)).value}>
           {this.createSelectableCodeComponents()}

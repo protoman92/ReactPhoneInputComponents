@@ -4,14 +4,12 @@ import {
   ScrollViewProperties,
   ScrollViewStyle,
   TextInputProperties,
-  TextProperties,
   TextStyle,
   ViewProperties,
   ViewStyle,
 } from 'react-native';
 
 import { TouchableButton } from 'react-native-basic-components';
-import { CountryCode as CC } from '../base/Dependency';
 
 export namespace Style {
   /**
@@ -135,7 +133,7 @@ export namespace Style {
    * provider extension.
    */
   export interface ProviderType extends TouchableButton.Style.ProviderType {
-    phoneInput: Readonly<SelectorType>;
+    readonly phoneInput: SelectorType;
   }
 }
 
@@ -183,18 +181,6 @@ export namespace Properties {
   export interface SelectableCountryCodeType extends ScrollViewProperties {}
 
   /**
-   * StyPropertiesle for a native phone input selectable code item component.
-   * @extends {TextProperties} TextProperties extension.
-   */
-  export interface CountryCodeItemType extends TextProperties {}
-
-  /**
-   * Properties for a native phone input country code item container component.
-   * @extends {ViewProperties} ViewProperties extension.
-   */
-  export interface CountryCodeItemContainerType extends ViewProperties {}
-
-  /**
    * Properties selector for a native phone input component.
    */
   export interface SelectorType {
@@ -205,8 +191,6 @@ export namespace Properties {
     extensionQueryField(id: string): Try<ExtensionQueryType>;
     extensionSearchContainer(id: string): Try<ExtensionSearchContainerType>;
     selectableCountryCodeList(id: string): Try<SelectableCountryCodeType>;
-    countryCodeItem(id: string, cc: CC): Try<CountryCodeItemType>;
-    countryCodeItemContainer(id: string, cc: CC): Try<CountryCodeItemContainerType>;
   }
 
   /**
@@ -215,6 +199,6 @@ export namespace Properties {
    * properties provider extension.
    */
   export interface ProviderType extends TouchableButton.Properties.ProviderType {
-    phoneInput?: Readonly<SelectorType>;
+    readonly phoneInput?: SelectorType;
   }
 }

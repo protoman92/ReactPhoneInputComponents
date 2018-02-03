@@ -73,6 +73,6 @@ export namespace Identity {
    * @extends {ErrorDisplay.Web.Identity.ProviderType} Error identity provider.
    */
   export interface ProviderType extends ErrorDisplay.Web.Identity.ProviderType {
-    phoneInput?: SelectorType;
+    readonly phoneInput?: SelectorType;
   }
 }

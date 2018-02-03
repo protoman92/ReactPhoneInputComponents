@@ -1,10 +1,10 @@
 import { BehaviorSubject, Observable, Observer, Subscription } from 'rxjs';
 import { Collections, Nullable, Numbers, Try } from 'javascriptutilities';
-import { StateType } from 'type-safe-state-js';
 import { ReduxStore as Store, DispatchReducer } from 'reactive-rx-redux-js';
 import { Data } from 'react-base-utilities-js';
 import { ErrorDisplay } from 'react-error-display-components';
 import { PhoneInput } from './../src';
+import { ReadonlyState } from './../src/phoneinput/base/Dependency';
 
 type CC = Data.CountryCode.Type;
 
@@ -24,31 +24,31 @@ class MockModel implements PhoneInput.Base.Model.Type {
   public model: PhoneInput.Base.Model.Type;
   public mockFetchCountryCodes?: () => CC[];
 
-  public get id(): Readonly<string> {
+  public get id(): string {
     return this.model.id;
   }
 
-  public get substatePath(): Readonly<Try<string>> {
+  public get substatePath(): Try<string> {
     return this.model.substatePath;
   }
 
-  public get fullExtensionPath(): Readonly<Try<string>> {
+  public get fullExtensionPath(): Try<string> {
     return this.model.fullExtensionPath;
   }
 
-  public get fullNumberPath(): Readonly<Try<string>> {
+  public get fullNumberPath(): Try<string> {
     return this.model.fullNumberPath;
   }
 
-  public get fullExtSearchValuePath(): Readonly<Try<string>> {
+  public get fullExtSearchValuePath(): Try<string> {
     return this.model.fullExtSearchValuePath;
   }
 
-  public get fullSelectableCodesPath(): Readonly<Try<string>> {
+  public get fullSelectableCodesPath(): Try<string> {
     return this.model.fullSelectableCodesPath;
   }
 
-  public get fullAllCountryCodesPath(): Readonly<Try<string>> {
+  public get fullAllCountryCodesPath(): Try<string> {
     return this.model.fullAllCountryCodesPath;
   }
 
@@ -90,19 +90,19 @@ class MockModel implements PhoneInput.Base.Model.Type {
     return this.model.selectableCodesStream();
   }
 
-  public extensionForState(state: Readonly<Nullable<StateType<any>>>): Try<CC> {
+  public extensionForState(state: ReadonlyState): Try<CC> {
     return this.model.extensionForState(state);
   }
 
-  public numberForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+  public numberForState = (state: ReadonlyState): Try<string> => {
     return this.model.numberForState(state);
   }
 
-  public extensionQueryForState = (state: Readonly<Nullable<StateType<any>>>): Try<string> => {
+  public extensionQueryForState = (state: ReadonlyState): Try<string> => {
     return this.model.extensionQueryForState(state);
   }
 
-  public selectableCodesForState(state: Readonly<Nullable<StateType<any>>>): Try<CC[]> {
+  public selectableCodesForState(state: ReadonlyState): Try<CC[]> {
     return this.model.selectableCodesForState(state);
   }
 
