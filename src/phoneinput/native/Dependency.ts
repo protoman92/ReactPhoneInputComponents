@@ -184,13 +184,13 @@ export namespace Properties {
    * Properties selector for a native phone input component.
    */
   export interface SelectorType {
-    mainContainer(id: string): Try<ContainerType>;
-    inputContainer(id: string): Try<InputContainerType>;
-    extensionInputField(id: string): Try<ExtensionInputType>;
-    phoneInputField(id: string): Try<PhoneInputType>;
-    extensionQueryField(id: string): Try<ExtensionQueryType>;
-    extensionSearchContainer(id: string): Try<ExtensionSearchContainerType>;
-    selectableCountryCodeList(id: string): Try<SelectableCountryCodeType>;
+    mainContainer?(id: string): Try<ContainerType>;
+    inputContainer?(id: string): Try<InputContainerType>;
+    extensionInputField?(id: string): Try<ExtensionInputType>;
+    phoneInputField?(id: string): Try<PhoneInputType>;
+    extensionQueryField?(id: string): Try<ExtensionQueryType>;
+    extensionSearchContainer?(id: string): Try<ExtensionSearchContainerType>;
+    selectableCountryCodeList?(id: string): Try<SelectableCountryCodeType>;
   }
 
   /**

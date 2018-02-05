@@ -210,7 +210,7 @@ describe('Phone input view model should work correctly', () => {
     rxModel = new PhoneInput.Rx.Model.Self(rxProvider, '');
   });
 
-  let testFetchAllCountryCodes = (
+  let testFetchAllCountryCodesWithError = (
     provider: PhoneInput.Base.Provider.Type,
     model: PhoneInput.Base.Model.Type,
   ): void => {
@@ -291,12 +291,12 @@ describe('Phone input view model should work correctly', () => {
     }
   };
 
-  it('Fetch country codes fail for dispatch - should update error state', () => {
-    testFetchAllCountryCodes(dispatchProvider, dispatchModel);
+  it.only('Fetch country codes fail for dispatch - should update error state', () => {
+    testFetchAllCountryCodesWithError(dispatchProvider, dispatchModel);
   });
 
   it('Fetch country codes fail for rx - should update error state', () => {
-    testFetchAllCountryCodes(rxProvider, rxModel);
+    testFetchAllCountryCodesWithError(rxProvider, rxModel);
   });
 
   it('Trigger dispatch extension search query - should update selectable codes', () => {

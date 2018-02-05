@@ -80,21 +80,29 @@ export class Self extends Base.Component.Self<Props.Type> {
     let Compulsory = Style.Compulsory;
 
     return <View
-      {...properties.flatMap(v => v.mainContainer(id)).value}
+      {...properties
+        .flatMap(v => Try.unwrap(v.mainContainer))
+        .flatMap(v => v(id)).value}
       style={style.mainContainer(id).value}>
       <View
-        {...properties.flatMap(v => v.inputContainer(id)).value}
+        {...properties
+          .flatMap(v => Try.unwrap(v.inputContainer))
+          .flatMap(v => v(id)).value}
         style={style.inputContainer(id)
           .map(v => Object.assign({}, v, Compulsory.inputContainer())).value}>
         <TextInput
-          {...properties.flatMap(v => v.extensionInputField(id)).value}
+          {...properties
+            .flatMap(v => Try.unwrap(v.extensionInputField))
+            .flatMap(v => v(id)).value}
           autoCorrect={false}
           editable={false}
           style={style.extensionInputField(id)
             .map(v => Object.assign({}, v, Compulsory.extensionInput())).value}
           value={this.currentExtension(state).value}/>
         <TextInput
-          {...properties.flatMap(v => v.phoneInputField(id)).value}
+          {...properties
+            .flatMap(v => Try.unwrap(v.phoneInputField))
+            .flatMap(v => v(id)).value}
           autoCorrect={false}
           onChangeText={this.handleNumberInput.bind(this)}
           style={style.phoneInputField(id)
@@ -102,18 +110,24 @@ export class Self extends Base.Component.Self<Props.Type> {
           value={this.currentPhoneNumber(state).value}/>
       </View>
       <View
-        {...properties.flatMap(v => v.extensionSearchContainer(id)).value}
+        {...properties
+          .flatMap(v => Try.unwrap(v.extensionSearchContainer))
+          .flatMap(v => v(id)).value}
         style={style.extensionSearchContainer(id)
           .map(v => Object.assign({}, v, Compulsory.extensionSearchContainer())).value}>
         <TextInput
-          {...properties.flatMap(v => v.extensionQueryField(id)).value}
+          {...properties
+            .flatMap(v => Try.unwrap(v.extensionQueryField))
+            .flatMap(v => v(id)).value}
           autoCorrect={false}
           onChangeText={this.handleExtensionQueryInput.bind(this)}
           style={style.extensionQueryField(id)
             .map(v => Object.assign({}, v, Compulsory.extensionQueryInput())).value}
           value={this.currentExtensionQuery(state).value}/>
         <FlatList
-          {...properties.flatMap(v => v.selectableCountryCodeList(id)).value}
+          {...properties
+            .flatMap(v => Try.unwrap(v.selectableCountryCodeList))
+            .flatMap(v => v(id)).value}
           data={this.currentSelectableCountryCodes(state).getOrElse([])}
           extraData={this.state}
           keyExtractor={this.keyExtractor.bind(this)}
